@@ -18,8 +18,10 @@
       } else {
         // token contains id, last4, and card type
         var token = response.id;
+        var currency = response.currency;
         // Insert the token into the form so it gets submitted to the server
         $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+        $form.append($('<input type="hidden" name="stripeCurrency" />').val(currency));
         // and re-submit
         $form.get(0).submit();
       }
@@ -139,9 +141,11 @@
         <div class="expenses col-xs-12 col-sm-6">
           <h3>Expenses</h3>
           <div class="expenses-bar">
-            <span class="progress-bar"></span>
-            <span class="amount-raised">$385.00 / $900.00</span>
-            <span class="expense-details">Details</span>
+            <span class="progress-bar width:65%"></span>
+            <span class="amount-raised">$<%= @need.total_contributed %> / $<%= @need.total_expenses %></span>
+            <span class="expense-details" data-toggle="modal" data-target="#expensesModal">
+              Details
+            </span>
           </div>
         </div>
         <div class="skills col-xs-12 col-sm-6">
@@ -201,8 +205,9 @@
     <% if can? :update, @need %>
       <%= link_to 'Edit Need', edit_need_path(@need), :class => "full-width-btn" %>
     <% else %>
+      <%= link_to 'Contribute!', new_need_contribution_path(@need) %>
       <%= form_tag needs_create_charge_path do %>
-        <%= hidden_field_tag(:user_id, current_user.id) %>
+        <%= hidden_field_tag(:user_id, (current_user || @need.user_church_admin).id) %>
         <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                 data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
                 data-description="<%= @need.title %>"
@@ -241,6 +246,27 @@
 </form>
  -->
  
+</div>
+
+<!-- expensesModal -->
+<div class="modal fade" id="expensesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Expenses</h4>
+      </div>
+      <div class="modal-body">
+        <% @need.expenses.each do |expense| %>
+          <%= expense.title %>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%= link_to "Add an expense", new_need_expense_path(@need), :class => 'important-btn' %>
+      </div>
+    </div>
+  </div>
 </div>
 
 

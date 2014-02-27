@@ -7,6 +7,9 @@ class Need < ActiveRecord::Base
 
   	belongs_to :user_posted_by, :foreign_key => 'user_id_posted_by', :class_name => "User"
   	belongs_to :user_church_admin, :foreign_key => 'user_id_church_admin', :class_name => "User"
+  
+  	has_many :contributions
+	has_many :expenses
 
 	validates :title, presence: true
 	validates :title_public, presence: true
@@ -25,4 +28,21 @@ class Need < ActiveRecord::Base
      	end
      	true
     end
+
+    def total_contributed
+    	i = 0
+      	self.contributions.each do |contribution|
+			i = i + contribution.cents
+      	end
+      	i
+    end
+
+    def total_expenses
+    	i = 0
+      	self.expenses.each do |expense|
+			i = i + expense.amount
+      	end
+      	i
+    end
+
 end

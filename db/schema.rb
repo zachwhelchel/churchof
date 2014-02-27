@@ -11,7 +11,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140204203722) do
+<<<<<<< HEAD
+ActiveRecord::Schema.define(version: 20140227200325) do
+=======
+ActiveRecord::Schema.define(version: 20140226190132) do
+>>>>>>> develop
+
+  create_table "contributions", force: true do |t|
+    t.integer  "contributor_id"
+    t.integer  "user_id"
+    t.integer  "need_id"
+    t.integer  "cents"
+    t.string   "stripe_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "email"
+  end
+
+  create_table "contributors", force: true do |t|
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+<<<<<<< HEAD
+
+  create_table "expenses", force: true do |t|
+    t.string   "title"
+    t.integer  "amount"
+    t.text     "description"
+    t.string   "documentation"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "need_id"
+  end
+
+  add_index "expenses", ["need_id"], name: "index_expenses_on_need_id"
+=======
+>>>>>>> develop
 
   create_table "needs", force: true do |t|
     t.string   "title"
